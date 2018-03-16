@@ -25,9 +25,9 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <RichTextBox Margin="4,4,0,0" IsEnabled="False"/>
+                <RichTextBox x:Name="ReceivedData" IsReadOnly="True" Margin="4,4,0,0"/>
                 <StackPanel Margin="3" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="Read data" Padding="5,0" Height="20" IsEnabled="False"/>
+                    <Button x:Name="ReadDataButton" Content="Read data" Padding="5,0" Height="20" IsEnabled="False" Click="ReadDataButton_Click"/>
                 </StackPanel>
             </Grid>
             <GridSplitter Grid.Column="1"
@@ -41,9 +41,9 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <RichTextBox Margin="0,4,4,0" IsEnabled="False"/>
+                <RichTextBox x:Name="SendingData" Margin="0,4,4,0"/>
                 <StackPanel Margin="3" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="Send data" Height="20" Padding="5,0" IsEnabled="False"/>
+                    <Button x:Name="SendDataButton" Content="Send data" Height="20" Padding="5,0" IsEnabled="False" Click="SendDataButton_Click"/>
                 </StackPanel>
             </Grid>
         </Grid>
@@ -53,7 +53,7 @@
                     <Label Content="Port" Margin="5,0"/>
                     <ComboBox x:Name="Ports" MinWidth="100" Height="20" DropDownOpened="PortsDropDownOpened" SelectionChanged="ConnectionSettingSelected"/>
                     <Label Content="Bound Rate" Margin="20,0,5,0"/>
-                    <ComboBox x:Name="RateBounds" MinWidth="100" Height="20" SelectionChanged="ConnectionSettingSelected">
+                    <ComboBox x:Name="BoundRates" MinWidth="100" Height="20" SelectionChanged="ConnectionSettingSelected">
                         <ComboBoxItem Content="300"/>
                         <ComboBoxItem Content="1200"/>
                         <ComboBoxItem Content="2400"/>
@@ -80,7 +80,7 @@
                             IsEnabled="False"
                             Click="ClosePortButton_Click"/>
                 </StackPanel>
-                <ProgressBar Orientation="Horizontal" HorizontalAlignment="Stretch" Height="10" Margin="0,10,0,0"/>
+                <ProgressBar x:Name="Progress" Orientation="Horizontal" HorizontalAlignment="Stretch" Height="10" Margin="0,10,0,0"/>
             </StackPanel>
         </Grid>
     </Grid>

@@ -20,6 +20,7 @@ namespace COM_Ports_Communication
     /// </summary>
     public partial class MainWindow : Window
     {
+        SerialPort port;
         public MainWindow()
         {
             InitializeComponent();
@@ -45,7 +46,7 @@ namespace COM_Ports_Communication
 
         private void ConnectionSettingSelected(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty((string)Ports.SelectedValue?.ToString()) && !string.IsNullOrEmpty((string)RateBounds.SelectedValue?.ToString()))
+            if (Ports.SelectedValue!=null && BoundRates.SelectedValue!=null)
             {
                 OpenPortButton.IsEnabled = true;
             }
@@ -58,10 +59,59 @@ namespace COM_Ports_Communication
 
         private void OpenPortButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (Ports.SelectedValue == null || BoundRates.SelectedValue == null) return;
+            try
+            {
+                port = new SerialPort();
+                port.PortName = ((ComboBoxItem)Ports.SelectedValue).Content.ToString();
+                port.BaudRate = int.Parse(((ComboBoxItem)BoundRates.SelectedValue).Content.ToString());
+                try
+                {
+                    port.Open();
+                }
+                catch(Exception ex)
+                {
+                    System.Windows.MessageBox.Show($"{ex.Message}", "Error", MessageBoxButton.OK);
+                    return;
+                }
+                OpenPortButton.IsEnabled = false;
+                ClosePortButton.IsEnabled = true;
+                ReadDataButton.IsEnabled = true;
+                SendDataButton.IsEnabled = true;
+                Ports.IsEnabled = false;
+                BoundRates.IsEnabled = false;
+            }
+            catch(Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+            }
         }
 
         private void ClosePortButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (port != null && port.IsOpen == true)
+            {
+                try
+                {
+                    port.Close();
+                    ReadDataButton.IsEnabled = false;
+                    SendDataButton.IsEnabled = false;
+                    OpenPortButton.IsEnabled = true;
+                    ClosePortButton.IsEnabled = false;
+                    Ports.IsEnabled = true;
+                    BoundRates.IsEnabled = true;
+                }
+                catch { }
+            }
+
+        }
+
+        private void ReadDataButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SendDataButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
