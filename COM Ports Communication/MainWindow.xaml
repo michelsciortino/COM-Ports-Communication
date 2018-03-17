@@ -4,103 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:COM_Ports_Communication"
+        xmlns:vm="clr-namespace:COM_Ports_Communication.ViewModels"
         mc:Ignorable="d"
         Title="COM Ports Communication"
         Height="350" Width="525"
-        MinHeight="350" MinWidth="525">
-
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="60"/>
-        </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" MinWidth="100"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*" MinWidth="100"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <TextBox x:Name="ReceivedData" IsReadOnly="True" Margin="4,4,0,0"/>
-                </ScrollViewer>
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <ProgressBar Grid.Column="0" x:Name="Progress" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="10" Margin="5" Visibility="Hidden"/>
-                    <Button Grid.Column="1"  x:Name="ReadDataButton" Content="Read data" Padding="5,0" HorizontalAlignment="Right" Height="20" IsEnabled="False" Click="ReadDataButton_Click" Visibility="Collapsed"/>
-                </Grid>
-            </Grid>
-            <GridSplitter Grid.Column="1"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Stretch"
-                          Background="Transparent" 
-                          ShowsPreview="False"
-                          Width="4"/>
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <TextBox x:Name="SendingData" Margin="0,4,4,0"/>
-                </ScrollViewer>
-                <Grid Margin="3" Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <ProgressBar Grid.Column="0" x:Name="SendProgress" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="10" Margin="5" Visibility="Hidden"/>
-                    <Button Grid.Column="1" x:Name="SendDataButton" Content="Send data" HorizontalAlignment="Right" Height="20" Padding="5,0" IsEnabled="False" Click="SendDataButton_Click"/>
-                </Grid>
-            </Grid>
-        </Grid>
-        <Grid Grid.Row="1">
-            <StackPanel VerticalAlignment="Bottom">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <Label Content="Port" Margin="5,0"/>
-                    <ComboBox x:Name="Ports" MinWidth="100" Height="20" DropDownOpened="PortsDropDownOpened" SelectionChanged="ConnectionSettingSelected"/>
-                    <Label Content="Bound Rate" Margin="20,0,5,0"/>
-                    <ComboBox x:Name="BoundRates" MinWidth="100" Height="20" SelectionChanged="ConnectionSettingSelected">
-                        <ComboBoxItem Content="300"/>
-                        <ComboBoxItem Content="1200"/>
-                        <ComboBoxItem Content="2400"/>
-                        <ComboBoxItem Content="4800"/>
-                        <ComboBoxItem Content="9600"/>
-                        <ComboBoxItem Content="19200"/>
-                        <ComboBoxItem Content="38400"/>
-                        <ComboBoxItem Content="57600"/>
-                        <ComboBoxItem Content="74880"/>
-                        <ComboBoxItem Content="115200"/>
-                        <ComboBoxItem Content="230400"/>
-                        <ComboBoxItem Content="256000"/>
-                        <ComboBoxItem Content="512000"/>
-                        <ComboBoxItem Content="921600"/>
-                    </ComboBox>
-                    <Button x:Name="OpenPortButton"
-                            Content="Open Port"
-                            Margin="40,0,5,0" Height="20" Padding="5,0"
-                            IsEnabled="False"
-                            Click="OpenPortButton_Click"/>
-                    <Button x:Name="ClosePortButton"
-                            Content="Close Port"
-                            Margin="0,0,5,0" Height="20" Padding="5,0"
-                            IsEnabled="False"
-                            Click="ClosePortButton_Click"/>
-                </StackPanel>
-                <Grid Height="20">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-                        <Label Content="Status:" FontSize="10" VerticalAlignment="Center" Padding="0,0,0,2"/>
-                        <Border x:Name="Status" BorderBrush="Black" BorderThickness="0.6" VerticalAlignment="Center" CornerRadius="10" Width="10" Height="10" Margin="5" Background="Red"/>
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
-        </Grid>
-    </Grid>
+        MinHeight="380" MinWidth="550">
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+    <Frame x:Name="MainWindowFrame"
+            Content="{Binding CurrentPage}"/>
 </Window>
