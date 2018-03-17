@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO.Ports;
+using System.Threading;
+
 namespace COM_Ports_Communication
 {
     /// <summary>
@@ -21,6 +23,8 @@ namespace COM_Ports_Communication
     public partial class MainWindow : Window
     {
         SerialPort port;
+        Thread Listener;
+        bool end;
         public MainWindow()
         {
             InitializeComponent();
@@ -80,6 +84,10 @@ namespace COM_Ports_Communication
                 SendDataButton.IsEnabled = true;
                 Ports.IsEnabled = false;
                 BoundRates.IsEnabled = false;
+                Status.Background = Brushes.GreenYellow;
+                Listener = new Thread(ListenPort);
+                end = false;
+                Listener.Start();
             }
             catch(Exception ex)
             {
@@ -100,6 +108,7 @@ namespace COM_Ports_Communication
                     ClosePortButton.IsEnabled = false;
                     Ports.IsEnabled = true;
                     BoundRates.IsEnabled = true;
+                    Status.Background = Brushes.Red;
                 }
                 catch { }
             }
@@ -108,12 +117,25 @@ namespace COM_Ports_Communication
 
         private void ReadDataButton_Click(object sender, RoutedEventArgs e)
         {
-
+            string receving = port.ReadLine();
+            ReceivedData.AppendText("\r" + receving);
+        }
+        private void ListenPort()
+        {
+            while (!end)
+            {
+                string received = port.ReadLine();
+                Dispatcher.Invoke(() =>
+                {
+                    ReceivedData.AppendText(received);
+                });
+            }
         }
 
         private void SendDataButton_Click(object sender, RoutedEventArgs e)
         {
-
+            port.WriteLine(SendingData.Text);
+            SendingData.Text = "";
         }
     }
 }
