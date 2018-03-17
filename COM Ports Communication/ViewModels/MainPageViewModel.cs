@@ -334,7 +334,7 @@ namespace COM_Ports_Communication.ViewModels
                     try
                     {
                         string receving = serialPort.ReadLine();
-                        ReceivedData = receving;
+                        ReceivedData += receving;
                     }
                     catch (Exception ex)
                     {
