@@ -259,3 +259,6 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/COM Ports Communication/Assets/icon.psd
+/COM Ports Communication/Assets/COM.ico
+/COM Ports Communication/Assets/Icon.png

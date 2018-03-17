@@ -10,16 +10,16 @@ using System.Windows;
 [assembly: AssemblyTitle("COM Ports Communication")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Michel Sciortino")]
 [assembly: AssemblyProduct("COM Ports Communication")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("Michel Sciortino")]
 [assembly: AssemblyCulture("")]
 
 // Se si imposta ComVisible su false, i tipi in questo assembly non saranno visibili
 // ai componenti COM. Se è necessario accedere a un tipo in questo assembly da
 // COM, impostare su true l'attributo ComVisible per tale tipo.
-[assembly: ComVisible(false)]
+[assembly: ComVisible(true)]
 
 //Per iniziare a creare applicazioni localizzabili, impostare
 //<UICulture>CultureYouAreCodingWith</UICulture> nel file .csproj
