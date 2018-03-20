@@ -8,9 +8,10 @@
       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
       xmlns:vm="clr-namespace:COM_Ports_Communication.ViewModels"
       mc:Ignorable="d" 
-      d:DesignHeight="300" d:DesignWidth="300"
-      MinHeight="350" MinWidth="525"
+      d:DesignHeight="300" d:DesignWidth="500"
+      MinHeight="350" MinWidth="500"
       Title="MainPage">
+   
     <Page.DataContext>
         <vm:MainPageViewModel/>
     </Page.DataContext>
@@ -22,7 +23,7 @@
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" MinWidth="100"/>
+                <ColumnDefinition Width="*" MinWidth="340"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*" MinWidth="100"/>
             </Grid.ColumnDefinitions>
@@ -41,7 +42,7 @@
                     </Grid.ColumnDefinitions>
                     <!--ProgressBar Grid.Column="0" x:Name="Progress" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="10" Margin="5" Visibility="Hidden"/-->
                     <Button Command="{Binding ClearButtonClick}"
-                            IsEnabled="{Binding CanClear}"
+                            IsEnabled="{Binding CanClear, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                             Content="Clear"
                             Padding="5,0"
                             HorizontalAlignment="Left"
@@ -49,18 +50,27 @@
                             Margin="5,0"/>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Command="{Binding ContinuousReading_Click}"
-                                IsEnabled="{Binding CanReadContinuously}"
+                                IsEnabled="{Binding CanReadContinuously, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                 Padding="5,0"
                                 Height="20"
-                                Margin="5,0">
-                            <TextBlock Text="{Binding ContinuousButton_text}"/>
+                                Margin="5,0"
+                                Content="{Binding ContinuousButton_text}">
                         </Button>
                         <Button Command="{Binding ReadDataClick}"
-                                IsEnabled="{Binding CanReadLine}"
+                                IsEnabled="{Binding CanReadLine, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                 Content="Read Line"
                                 Padding="5,0"
                                 Margin="5,0"
                                 Height="20"/>
+                        <TextBox Style="{StaticResource TextBoxWithPlaceholder}"
+                                 Text="{Binding Timeout,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                 IsEnabled="{Binding CanSetTimeout}"
+                                 Tag="Timeout ms"
+                                 Height="20"
+                                 Width="70"
+                                 Margin="5,0"
+                                 Padding="5,0"
+                                 TextAlignment="Center"/>
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -86,7 +96,7 @@
                     <!--ProgressBar Grid.Column="0" x:Name="SendProgress" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="10" Margin="5" Visibility="Hidden"/-->
                     <Button Grid.Column="1"
                             Command="{Binding SendDataButtonClick}"
-                            IsEnabled="{Binding CanSendData}"
+                            IsEnabled="{Binding CanSendData, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                             Content="Send data"
                             HorizontalAlignment="Right"
                             Height="20"
@@ -99,8 +109,8 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Label Content="Port" Margin="5,0"/>
                     <ComboBox ItemsSource="{Binding Path=PortList}"
-                              IsEnabled="{Binding CanSelectPort}"
-                              SelectedValue="{Binding SelectedPort}"
+                              IsEnabled="{Binding CanSelectPort, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValue="{Binding SelectedPort, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                               MinWidth="100"
                               Height="20"
                               >
@@ -113,8 +123,8 @@
 
                     <Label Content="Bound Rate" Margin="20,0,5,0"/>
                     <ComboBox ItemsSource="{Binding Path=BoundRates}"
-                              SelectedValue="{Binding SelectedBoundRate}"
-                              IsEnabled="{Binding CanSelectBoundRate}"
+                              SelectedValue="{Binding SelectedBoundRate, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding CanSelectBoundRate, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               MinWidth="100"
                               Height="20">
                         <i:Interaction.Triggers>
@@ -126,11 +136,11 @@
                     <Button Command="{Binding OpenPortButtonClick}"
                             Content="Open Port"
                             Margin="40,0,5,0" Height="20" Padding="5,0"
-                            IsEnabled="{Binding CanOpenPort}"/>
+                            IsEnabled="{Binding CanOpenPort, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Command="{Binding ClosePortButtonClick}"
                             Content="Close Port"
                             Margin="0,0,5,0" Height="20" Padding="5,0"
-                            IsEnabled="{Binding CanClosePort}"/>
+                            IsEnabled="{Binding CanClosePort, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <Grid Height="20">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
@@ -141,7 +151,7 @@
                                 CornerRadius="10"
                                 Width="10" Height="10"
                                 Margin="5"
-                                Background="{Binding StatusColor}"/>
+                                Background="{Binding StatusColor, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </Grid>
             </StackPanel>

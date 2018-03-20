@@ -9,34 +9,41 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using System.Diagnostics;
+
 
 namespace COM_Ports_Communication.ViewModels
 {
-    public class MainPageViewModel : BaseVireModel
+    public class MainPageViewModel : ViewModelBase
     {
         #region define
         public static Brush ConnectedColor = Brushes.GreenYellow;
         public static Brush NotConnectedColor = Brushes.Red;
+        public static int DefaultTimeout = 1000;
         #endregion
-        
+
         #region Private Variables
         //private Mutex listeningMutex = new Mutex();
         private bool IsListening = false;
         private Thread listener;
         private Models.SerialPortCommunication serialPort;
         private bool end;
+        private int timeout= DefaultTimeout;
         #endregion
 
         #region Private Properties
-
+        private string _timeout = "";
         private string _continuousButton_text = "Read Continuously";
-        private string _receivedData;
+        private string _receivedData="";
         private string _sendingData;
         private bool _canOpenPort = false;
         private bool _canClosePort = false;
         private bool _canClear = false;
         private bool _canReadContinuously = false;
         private bool _canReadLine = false;
+        private bool _canSetTimeout = false;
         private bool _canSendData= false;
         private bool _canSelectPort = true;
         private bool _canSelectBoundRate = true;
@@ -48,6 +55,33 @@ namespace COM_Ports_Communication.ViewModels
 
         #region Public Properties
 
+        public string Timeout
+        {
+            get { return _timeout; }
+            set
+            {
+                if (value != _timeout)
+                {
+                    if (value == "")
+                    {
+                        _timeout = "";
+                        timeout = DefaultTimeout;
+                    }
+                    else
+                    try
+                    {
+                        timeout = int.Parse(value);
+                        _timeout = value;
+                        RaisePropertyChanged(nameof(Timeout));
+                    }
+                    catch //non è un numero
+                    {
+                        Timeout = _timeout;
+                        RaisePropertyChanged(nameof(Timeout));
+                    }
+                }
+            }
+        }
         public string ContinuousButton_text
         {
             get { return _continuousButton_text; }
@@ -56,7 +90,7 @@ namespace COM_Ports_Communication.ViewModels
                 if (_continuousButton_text != value)
                 {
                     _continuousButton_text = value;
-                    OnPropertyChanged(nameof(ContinuousButton_text));
+                    RaisePropertyChanged(nameof(ContinuousButton_text));
                 }
             }
         }
@@ -68,7 +102,7 @@ namespace COM_Ports_Communication.ViewModels
             set
             {
                 _receivedData=value;
-                OnPropertyChanged(ReceivedData);                
+                RaisePropertyChanged(nameof(ReceivedData));                
             }
         }
         public string SendingData
@@ -77,11 +111,9 @@ namespace COM_Ports_Communication.ViewModels
             set
             {
                 _sendingData = value;
-                OnPropertyChanged(SendingData);
+                RaisePropertyChanged(nameof(SendingData));
             }
         }
-
-        
 
         public bool CanOpenPort
         {
@@ -90,7 +122,7 @@ namespace COM_Ports_Communication.ViewModels
                 if(_canOpenPort != value)
                 {
                     _canOpenPort = value;
-                    OnPropertyChanged(nameof(CanOpenPort));
+                    RaisePropertyChanged(nameof(CanOpenPort));
                 }
             }
         }
@@ -102,7 +134,7 @@ namespace COM_Ports_Communication.ViewModels
                 if (_canClosePort != value)
                 {
                     _canClosePort = value;
-                    OnPropertyChanged(nameof(CanClosePort));
+                    RaisePropertyChanged(nameof(CanClosePort));
                 }
             }
         }
@@ -114,7 +146,7 @@ namespace COM_Ports_Communication.ViewModels
                 if (_canClear != value)
                 {
                     _canClear = value;
-                    OnPropertyChanged(nameof(CanClear));
+                    RaisePropertyChanged(nameof(CanClear));
                 }
             }
         }
@@ -126,7 +158,7 @@ namespace COM_Ports_Communication.ViewModels
                 if (_canReadContinuously != value)
                 {
                     _canReadContinuously = value;
-                    OnPropertyChanged(nameof(CanReadContinuously));
+                    RaisePropertyChanged(nameof(CanReadContinuously));
                 }
             }
         }
@@ -138,7 +170,19 @@ namespace COM_Ports_Communication.ViewModels
                 if (_canReadLine != value)
                 {
                     _canReadLine = value;
-                    OnPropertyChanged(nameof(CanReadLine));
+                    RaisePropertyChanged(nameof(CanReadLine));
+                }
+            }
+        }
+        public bool CanSetTimeout
+        {
+            get { return _canSetTimeout; }
+            set
+            {
+                if (value != _canSetTimeout)
+                {
+                    _canSetTimeout = value;
+                    RaisePropertyChanged(nameof(CanSetTimeout));
                 }
             }
         }
@@ -150,7 +194,7 @@ namespace COM_Ports_Communication.ViewModels
                 if (_canSendData != value)
                 {
                     _canSendData = value;
-                    OnPropertyChanged(nameof(CanSendData));
+                    RaisePropertyChanged(nameof(CanSendData));
                 }
             }
         }
@@ -162,7 +206,7 @@ namespace COM_Ports_Communication.ViewModels
                 if (_canSelectPort != value)
                 {
                     _canSelectPort = value;
-                    OnPropertyChanged(nameof(CanSelectPort));
+                    RaisePropertyChanged(nameof(CanSelectPort));
                 }
             }
         }
@@ -174,7 +218,7 @@ namespace COM_Ports_Communication.ViewModels
                 if (_canSelectBoundRate != value)
                 {
                     _canSelectBoundRate = value;
-                    OnPropertyChanged(nameof(CanSelectBoundRate));
+                    RaisePropertyChanged(nameof(CanSelectBoundRate));
                 }
             }
         }
@@ -184,7 +228,7 @@ namespace COM_Ports_Communication.ViewModels
                 if (_selectedPort != value)
                 {
                     _selectedPort = value;
-                    OnPropertyChanged(nameof(SelectedPort));
+                    RaisePropertyChanged(nameof(SelectedPort));
                 }
             }
         }
@@ -196,7 +240,7 @@ namespace COM_Ports_Communication.ViewModels
                 if (_selectedBoundRate != value)
                 {
                     _selectedBoundRate = value;
-                    OnPropertyChanged(nameof(SelectedBoundRate));
+                    RaisePropertyChanged(nameof(SelectedBoundRate));
                 }
             }
         }
@@ -208,7 +252,7 @@ namespace COM_Ports_Communication.ViewModels
                 if (_statusColor != value)
                 {
                     _statusColor = value;
-                    OnPropertyChanged(nameof(StatusColor));
+                    RaisePropertyChanged(nameof(StatusColor));
                 }
             }
         }
@@ -252,10 +296,11 @@ namespace COM_Ports_Communication.ViewModels
                     CanClear = true;
                     CanReadContinuously = true;
                     CanReadLine = true;
+                    CanSetTimeout = true;
 
                     /* Port Sending Button Enabling */
                     CanSendData = true;
-
+                    
                     /* Disabling Port and Bound Rate Selection */
                     CanSelectPort = false;
                     CanSelectBoundRate = false;
@@ -272,14 +317,27 @@ namespace COM_Ports_Communication.ViewModels
             {
                 if (SelectedPort != null && serialPort.IsOpen == true)
                 {
+                    
                     try
                     {
+                        if (listener!=null &&
+                            (listener.ThreadState == System.Threading.ThreadState.Running ||
+                            listener.ThreadState == System.Threading.ThreadState.Background ||
+                            listener.ThreadState== System.Threading.ThreadState.WaitSleepJoin))
+                        {
+                            end = true;
+                            listener.Join();
+                            ContinuousButton_text = "Read Continuously";
+                            IsListening = false;
+                        }
                         serialPort.CloseConnection();
+
 
                         /* Disabling receiving and sending data buttons */
                         CanReadContinuously = false;
                         CanReadLine = false;
                         CanSendData = false;
+                        CanClear = false;
 
                         /* Enabling Port Settings Selection */
                         CanSelectPort = true;
@@ -317,14 +375,30 @@ namespace COM_Ports_Communication.ViewModels
 
 
                     ContinuousButton_text = "Stop";
+                    CanSetTimeout = false;
                     CanReadLine = false;
                     listener.Start();
+                    //ListenSerialPort();
+
                 }
                 else
                 {
                     //listeningMutex.WaitOne();
                     end = true;
+                    try
+                    {
+                        listener.Join();
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK);
+                    }
                     //listeningMutex.ReleaseMutex();
+
+                    ContinuousButton_text = "Read Continuously";
+                    CanReadLine = true;
+                    CanSetTimeout = true;
+                    IsListening = false;
                 }
             });
             ReadDataClick = new RelayCommand(()=>
@@ -333,7 +407,7 @@ namespace COM_Ports_Communication.ViewModels
                 {
                     try
                     {
-                        string receving = serialPort.ReadLine();
+                        string receving = serialPort.ReadLine(timeout);
                         ReceivedData += receving;
                     }
                     catch (Exception ex)
@@ -369,12 +443,11 @@ namespace COM_Ports_Communication.ViewModels
         public ICommand ContinuousReading_Click { get; set; }
         public ICommand ReadDataClick { get; set; }
         public ICommand SendDataButtonClick { get; set; }
-
         #endregion
 
 
 
-        
+
 
         private void ListenSerialPort()
         {
@@ -382,15 +455,17 @@ namespace COM_Ports_Communication.ViewModels
             while (!end)
             {
                 //listeningMutex.ReleaseMutex();
-                string received = serialPort.ReadLine();
-                ReceivedData += received;
+                try
+                {
+                    string received = serialPort.ReadLine(timeout);
+                    ReceivedData += received;
+                }
+                catch {
+                    ReceivedData += "parola\n";
+                }
                 //listeningMutex.WaitOne();
             }
             //listeningMutex.ReleaseMutex();
-
-            ContinuousButton_text = "Read Continuously";
-            CanReadLine = true;
-            IsListening = false;
         }
     }
 }

@@ -50,12 +50,27 @@ namespace COM_Ports_Communication.Models
         /// </summary>
         public void CloseConnection()
         {
-            port.Close();
+            try
+            {
+                port.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public string ReadLine()
+        public string ReadLine(int timeout)
         {
-            return port.ReadLine();
+            try
+            {
+                port.ReadTimeout = timeout;
+                return port.ReadLine();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
         public void WriteLine(string data)
         {

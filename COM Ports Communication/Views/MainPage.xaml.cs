@@ -24,5 +24,6 @@ namespace COM_Ports_Communication.Views
         {
             InitializeComponent();
         }
+
     }
 }

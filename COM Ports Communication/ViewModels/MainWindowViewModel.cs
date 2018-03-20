@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-
+using GalaSoft.MvvmLight;
 namespace COM_Ports_Communication.ViewModels
 {
-    class MainWindowViewModel : BaseVireModel
+    class MainWindowViewModel : ViewModelBase
     {
         #region private
         private Frame _mainWindowFrame;
@@ -21,7 +21,7 @@ namespace COM_Ports_Communication.ViewModels
             set
             {
                 _mainWindowFrame = value;
-                OnPropertyChanged(nameof(MainWindowFrame));
+                RaisePropertyChanged(nameof(MainWindowFrame));
             }
         }
         public Page CurrentPage { get; set; } = new Views.MainPage();
