@@ -460,9 +460,7 @@ namespace COM_Ports_Communication.ViewModels
                     string received = serialPort.ReadLine(timeout);
                     ReceivedData += received;
                 }
-                catch {
-                    ReceivedData += "parola\n";
-                }
+                catch { }
                 //listeningMutex.WaitOne();
             }
             //listeningMutex.ReleaseMutex();
